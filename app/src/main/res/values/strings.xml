@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Borkenbug</string>
+    <string name="title_activity_gpserror">GPSError</string>
+</resources>
