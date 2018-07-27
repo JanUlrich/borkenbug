@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Borkenbug</string>
     <string name="title_activity_gpserror">GPSError</string>
+
+    <string-array name="bugArray">
+        <item>Borkenkäfer</item>
+        <item>Eichenprozessionsspinner</item>
+    </string-array>
+    <string-array name="treeArray">
+        <item>Buche</item>
+        <item>Fichte</item>
+        <item>Tanne</item>
+    </string-array>
 </resources>

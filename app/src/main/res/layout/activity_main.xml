@@ -5,44 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/textView"
+            android:text="Bestimme Position ..."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/gpsLastUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bestimme Position ..."
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/gpsStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suche GPS"/>
 
-    <TextView
-        android:id="@+id/gpsLastUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        <Button
+            android:id="@+id/addMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Marker setzen"
+            android:onClick="setMarker"/>
+        <Button
+            android:id="@+id/export"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daten exportierens"
+            android:onClick="export"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/gpsStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Suche GPS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gpsLastUpdate" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Marker setzen"
-        tools:layout_editor_absoluteX="145dp"
-        tools:layout_editor_absoluteY="107dp"
-        android:onClick="setMarker"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GPSError" />
-        <activity android:name=".AddMarker"></activity>
+        <activity android:name=".AddMarker" />
+        <activity android:name=".Export"></activity>
     </application>
 
 </manifest>
