@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 public class Data extends ViewModel {
     private MutableLiveData<Integer> satellites = new MutableLiveData<>();
     private MutableLiveData<Date> lastGPSFix = new MutableLiveData<>();

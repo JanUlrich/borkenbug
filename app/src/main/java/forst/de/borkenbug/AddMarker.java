@@ -19,14 +19,15 @@ import java.util.HashMap;
 
 public class AddMarker extends AppCompatActivity {
 
+    private Location location;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
         setupLayout();
 
-        //Intent intent = getIntent();
-        //Location location = (Location) intent.getParcelableExtra(MainActivity.EXTRA_POSITION);
+        Intent intent = getIntent();
+        location = (Location) intent.getParcelableExtra(MainActivity.EXTRA_POSITION);
 
         //TextView textView = findViewById(R.id.);
         //textView.setText(location.getAccuracy() + "");
@@ -37,9 +38,11 @@ public class AddMarker extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
         String filename = format.format(Calendar.getInstance().getTime());
 
-        String fileContents = "test";
+        Waypoint waypoint = new Waypoint(location, new WaypointData());
+        String fileContents = waypoint.toJSON();
+
         Spinner spinner = findViewById(R.id.spinnerBug);
-        fileContents += spinner.getPrompt();
+        //fileContents += spinner.getPrompt();
 
         try {
             FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
@@ -50,6 +53,7 @@ public class AddMarker extends AppCompatActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }

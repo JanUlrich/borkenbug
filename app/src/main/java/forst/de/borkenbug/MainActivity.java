@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_POSITION, position);
             startActivity(intent);
         }
-        startActivity(intent); //Debug
+        //startActivity(intent); //Debug
     }
 
     public void export(View view){
