@@ -4,13 +4,17 @@ import android.location.Location;
 
 import com.google.gson.Gson;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+
 import java.io.Serializable;
 
-public class Waypoint {
+public class Waypoint extends OverlayItem{
     private final Location location;
     private final WaypointData data;
 
     public Waypoint(Location loc, WaypointData data){
+        super("","", new GeoPoint(loc));
         this.location = loc;
         this.data = data;
     }
@@ -19,8 +23,8 @@ public class Waypoint {
         return new Gson().toJson(this);
     }
 
-    public Waypoint fromJSON(String json) {
-        return new Gson().fromJson(json, this.getClass());
+    public static Waypoint fromJSON(String json) {
+        return new Gson().fromJson(json, Waypoint.class);
     }
 
     /**

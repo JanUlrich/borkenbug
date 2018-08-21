@@ -45,6 +45,7 @@ public class AddMarker extends AppCompatActivity {
         //fileContents += spinner.getPrompt();
 
         try {
+            //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)
             FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(fileContents.getBytes());
             outputStream.close();

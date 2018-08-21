@@ -72,37 +72,6 @@ public class Export extends AppCompatActivity {
 
         */
     }
-    private List<File> getListFiles(File parentDir) {
-        ArrayList<File> inFiles = new ArrayList<File>();
-        File[] files = parentDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                inFiles.addAll(getListFiles(file));
-            } else {
-                inFiles.add(file);
-            }
-        }
-        return inFiles;
-    }
-
-    private String getFileData(String name){
-        return "";
-    }
-
-    private String getFileData(File file) throws IOException {
-        StringBuilder text = new StringBuilder();
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            text.append(line);
-            text.append('\n');
-        }
-        br.close();
-
-        return text.toString();
-    }
 
     public void sendEmail(View view) throws IOException {
         /*
@@ -117,8 +86,8 @@ public class Export extends AppCompatActivity {
         */
         String data = "";
         File dir = getApplicationContext().getFilesDir();
-        for(File f : getListFiles(dir)){
-            data += getFileData(f);
+        for(File f : Storage.getListFiles(dir)){
+            data += Storage.getFileData(f);
         }
 
         Intent i = new Intent(Intent.ACTION_SEND);
