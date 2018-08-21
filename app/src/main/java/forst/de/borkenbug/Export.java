@@ -17,7 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,34 +35,42 @@ public class Export extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_export);
         data = getSharedPreferences(getString(R.string.app_name) + getString(R.string.export_activity_name), MODE_PRIVATE);
-
+        try {
+            sendEmail(null);
+        } catch (IOException e) {
+            Toast.makeText(this, "IO-Fehler", Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(this, "Export", Toast.LENGTH_SHORT).show();
+        finish();
+        /*
+        setContentView(R.layout.activity_export);
         ArrayList<String> fileNames = new ArrayList<>();
         File dir = getApplicationContext().getFilesDir();
         List<File> files = getListFiles(dir);
         for(File f : files){
             fileNames.add(f.getName());
         }
+
         //TODO: Hier eine Funktionierende Liste implementieren
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_multiple_choice, fileNames);
         ListView listView = findViewById(R.id.dataList);
         listView.setAdapter(adapter);
 
-        /*
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         int size = listView.getCount();
         for(int i = 0; i<size; i++){
             listView.setItemChecked(i, true);
         }
-        */
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
             // change the checkbox state
             CheckedTextView checkedTextView = ((CheckedTextView)view);
             checkedTextView.setChecked(!checkedTextView.isChecked());
         });
+
+        */
     }
     private List<File> getListFiles(File parentDir) {
         ArrayList<File> inFiles = new ArrayList<File>();
@@ -78,31 +89,49 @@ public class Export extends AppCompatActivity {
         return "";
     }
 
-    public void sendEmail(View view){
+    private String getFileData(File file) throws IOException {
+        StringBuilder text = new StringBuilder();
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            text.append(line);
+            text.append('\n');
+        }
+        br.close();
+
+        return text.toString();
+    }
+
+    public void sendEmail(View view) throws IOException {
+        /*
         ListView listView = findViewById(R.id.dataList);
         SparseBooleanArray checked = listView.getCheckedItemPositions();
-
         for (int i = 0; i < listView.getCount(); i++) {
             if (checked.get(i)) {
                 String filename = listView.getItemAtPosition(i).toString();
-                //Toast.makeText(this, filename, Toast.LENGTH_SHORT).show();
-
-
+                Toast.makeText(this, filename, Toast.LENGTH_SHORT).show(); //DEBUG
             }
         }
-        /*
+        */
+        String data = "";
+        File dir = getApplicationContext().getFilesDir();
+        for(File f : getListFiles(dir)){
+            data += getFileData(f);
+        }
+
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-        i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"stadelmeier.andreas@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "Testdaten");
+        i.putExtra(Intent.EXTRA_TEXT   , data);
         //i.putExtra(Intent.EXTRA_STREAM, path);
         try {
             startActivity(Intent.createChooser(i, "Sende mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "Es ist kein Email-Client installiert", Toast.LENGTH_SHORT).show();
         }
-        */
     }
     /*
     private class ListAdapter extends ArrayAdapter<String> {
