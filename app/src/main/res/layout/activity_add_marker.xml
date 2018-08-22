@@ -20,15 +20,27 @@
             android:paddingRight="16dp"
             android:orientation="vertical" >
             <Spinner
+                android:id="@+id/spinnerTree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Spinner
                 android:id="@+id/spinnerBug"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <Spinner
-                android:id="@+id/spinnerTree"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/festmeter"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fm_hint"
+                android:inputType="number" />
+            <EditText
+                android:id="@+id/fläche"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fläche_hint"
+                android:inputType="number" />
             <Button
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"

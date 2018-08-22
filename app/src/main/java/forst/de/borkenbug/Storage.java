@@ -36,8 +36,15 @@ public class Storage {
         return folder;
     }
 
-    public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
+    public static void setWaypointSynced(Waypoint wp, Context context){
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
+        String filename = format.format(wp.location.getTime());
+        //Hier könnten die Waypoints gelöscht werden oder in einen anderen Ordner verschoben.
+        //Ist momentan nicht nötig, da nicht auf den Network State Change gewartet wird sondern direkt gesendet
+        //new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
+    }
 
+    public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
         String filename = format.format(wp.location.getTime());
         FileOutputStream outputStream = new FileOutputStream(

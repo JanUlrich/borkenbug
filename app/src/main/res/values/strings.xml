@@ -2,14 +2,6 @@
     <string name="app_name">Borkenbug</string>
     <string name="export_activity_name">Export</string>
     <string name="title_activity_gpserror">GPSError</string>
-
-    <string-array name="bugArray">
-        <item>Borkenkäfer</item>
-        <item>Eichenprozessionsspinner</item>
-    </string-array>
-    <string-array name="treeArray">
-        <item>Buche</item>
-        <item>Fichte</item>
-        <item>Tanne</item>
-    </string-array>
+    <string name="fm_hint">Anzahl Festmeter</string>
+    <string name="fläche_hint">Fläche in m²</string>
 </resources>
