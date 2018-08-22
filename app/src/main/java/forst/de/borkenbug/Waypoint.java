@@ -9,12 +9,12 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.Serializable;
 
-public class Waypoint extends OverlayItem{
-    private final Location location;
-    private final WaypointData data;
+public class Waypoint {
+    public final Location location;
+    public final WaypointData data;
 
     public Waypoint(Location loc, WaypointData data){
-        super("","", new GeoPoint(loc));
+        //super("","", new GeoPoint(loc));
         this.location = loc;
         this.data = data;
     }
@@ -24,6 +24,7 @@ public class Waypoint extends OverlayItem{
     }
 
     public static Waypoint fromJSON(String json) {
+        //return new Waypoint(new Gson().fromJson(json, Location.class), new WaypointData());
         return new Gson().fromJson(json, Waypoint.class);
     }
 
@@ -36,5 +37,9 @@ public class Waypoint extends OverlayItem{
         ret += "\t" + location.getLongitude();
         ret += "\t" + data.toOSMText();
         return ret;
+    }
+
+    public OverlayItem toOverlayItem(){
+        return new OverlayItem("", "", new GeoPoint(location));
     }
 }

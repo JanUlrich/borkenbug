@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "de.forst.borkenbug.MESSAGE";
@@ -113,31 +114,36 @@ public class MainActivity extends AppCompatActivity {
 
         map.getController().setZoom(16.5);
 
-        try {
-            setMarkers();
-        } catch (IOException e) {
-            Toast.makeText(this, "IO-Fehler", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setMarkers() throws IOException {
-        List<Waypoint> items = Storage.getWaypoints(getApplicationContext());
-        ItemizedOverlayWithFocus<Waypoint> mOverlay = new ItemizedOverlayWithFocus<Waypoint>(items,
-                new ItemizedIconOverlay.OnItemGestureListener<Waypoint>() {
+        List<OverlayItem> items = new ArrayList<>();
+        for(Waypoint wp : Storage.getWaypoints(getApplicationContext())){
+            items.add(wp.toOverlayItem());
+        }
+        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
-                    public boolean onItemSingleTapUp(final int index, final Waypoint item) {
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         //do something
                         return true;
                     }
                     @Override
-                    public boolean onItemLongPress(final int index, final Waypoint item) {
+                    public boolean onItemLongPress(final int index, final OverlayItem item) {
                         return false;
                     }
                 }, getApplicationContext());
+        map.getOverlays().add(mOverlay);
     }
 
     public void onResume(){
         super.onResume();
+        try {
+            setMarkers();
+        } catch (Exception e) {
+            Toast.makeText(this, "IO-Fehler", Toast.LENGTH_SHORT).show();
+        }
+
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

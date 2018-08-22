@@ -85,9 +85,8 @@ public class Export extends AppCompatActivity {
         }
         */
         String data = "";
-        File dir = getApplicationContext().getFilesDir();
-        for(File f : Storage.getListFiles(dir)){
-            data += Storage.getFileData(f);
+        for(Waypoint wp : Storage.getWaypoints(getApplicationContext())){
+            data += wp.toJSON();
         }
 
         Intent i = new Intent(Intent.ACTION_SEND);
