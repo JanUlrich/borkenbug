@@ -4,10 +4,6 @@ import android.location.Location;
 
 import com.google.gson.Gson;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.OverlayItem;
-
-import java.io.Serializable;
 
 public class Waypoint {
     public final Location location;
@@ -37,9 +33,5 @@ public class Waypoint {
         ret += "\t" + location.getLongitude();
         ret += "\t" + data.toOSMText();
         return ret;
-    }
-
-    public OverlayItem toOverlayItem(){
-        return new OverlayItem("", "", new GeoPoint(location));
     }
 }
