@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 public class Waypoint {
     public final Location location;
     public final WaypointData data;
+    public boolean exported = false;
+    public boolean synced = false;
 
     public Waypoint(Location loc, WaypointData data){
         //super("","", new GeoPoint(loc));

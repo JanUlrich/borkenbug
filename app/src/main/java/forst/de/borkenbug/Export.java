@@ -9,8 +9,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Checkable;
@@ -20,10 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,56 +37,38 @@ public class Export extends AppCompatActivity {
         //data = getSharedPreferences(getString(R.string.app_name) + getString(R.string.export_activity_name), MODE_PRIVATE);
         setContentView(R.layout.activity_export);
 
-        //TODO: Hier eine Funktionierende Liste implementieren
         WaypointsArrayAdapter adapter = null;
         try {
             adapter = new WaypointsArrayAdapter(this,
-                    android.R.layout.simple_list_item_multiple_choice, Storage.getWaypoints(this));
+                    -1, Storage.getWaypoints(this));
 
             ListView listView = findViewById(R.id.dataList);
             listView.setAdapter(adapter);
-
-            /*
-            listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-            int size = listView.getCount();
-            for(int i = 0; i<size; i++){
-                listView.setItemChecked(i, true);
+            //Alle nicht exportierten sind standardmäßig angeklickt:
+            for (int i = 0; i < listView.getCount(); i++) {
+                Waypoint wp = (Waypoint) listView.getAdapter().getItem(i);
+                listView.setItemChecked(i, !wp.exported);
             }
-            */
-
-            listView.setOnItemClickListener((parent, view, position, id) -> {
-                // change the checkbox state
-                CheckedTextView checkedTextView = ((CheckedTextView)view);
-                checkedTextView.setChecked(!checkedTextView.isChecked());
-            });
-
         } catch (IOException e) {
             finish();
         }
-        /*
-        try {
-            sendEmail(null);
-        } catch (IOException e) {
-            Toast.makeText(this, "IO-Fehler", Toast.LENGTH_SHORT).show();
-        }
-        Toast.makeText(this, "Export", Toast.LENGTH_SHORT).show();
-        finish();
-        */
     }
 
     public void sendEmail(View view) throws IOException {
-        /*
+        List<Waypoint> exports = new ArrayList<>();
+
         ListView listView = findViewById(R.id.dataList);
         SparseBooleanArray checked = listView.getCheckedItemPositions();
         for (int i = 0; i < listView.getCount(); i++) {
             if (checked.get(i)) {
-                String filename = listView.getItemAtPosition(i).toString();
-                Toast.makeText(this, filename, Toast.LENGTH_SHORT).show(); //DEBUG
+                Waypoint wp = (Waypoint) listView.getAdapter().getItem(i);
+                if(wp != null)exports.add(wp);
             }
         }
-        */
+        if(exports.size()==0)return;
+
         String data = "";
-        for(Waypoint wp : Storage.getWaypoints(getApplicationContext())){
+        for(Waypoint wp : exports){
             data += wp.toJSON();
         }
 
@@ -101,9 +79,22 @@ public class Export extends AppCompatActivity {
         i.putExtra(Intent.EXTRA_TEXT   , data);
         //i.putExtra(Intent.EXTRA_STREAM, path);
         try {
+            //startActivityForResult(Intent.createChooser(i, "Sende mail..."), MAIL_INTENT);
             startActivity(Intent.createChooser(i, "Sende mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Es ist kein Email-Client installiert", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "FEHLER: Es ist kein Email-Client installiert", Toast.LENGTH_LONG).show();
+        }
+    }
+    private static final int MAIL_INTENT = 312315;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MAIL_INTENT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Daten exportiert", Toast.LENGTH_SHORT).show();
+                finish();
+            }else{
+
+            }
         }
     }
 
@@ -119,78 +110,56 @@ public class Export extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent)
         {
             if(convertView == null)
-                convertView = new PackageView(getContext());
+                convertView = new WaypointView(getContext());
 
             Waypoint pack = getItem(position);
-            PackageView packView = (PackageView) convertView;
-            packView.setPackage(pack);
+            WaypointView packView = (WaypointView) convertView;
+            packView.setWaypoint(pack);
 
             return convertView;
         }
 
     }
 
-    private class PackageView extends LinearLayout implements Checkable
+    private class WaypointView extends LinearLayout implements Checkable
     {
         private View v;
-        private TextView tv0;
-        private TextView tv1;
-        private TextView tv2;
-        private TextView tv3;
+        private TextView value;
 
-        private CheckBox testCheckBox;
+        private CheckBox checkBox;
 
-        public PackageView(Context context)
+        public WaypointView(Context context)
         {
             super(context);
             LayoutInflater inflater = LayoutInflater.from(context);
-            v = inflater.inflate(R.layout.favorites_package, this, true);
-            tv0 = (TextView) v.findViewById(R.id.favPackageId);
-            tv1 = (TextView) v.findViewById(R.id.favEventDate);
-            tv2 = (TextView) v.findViewById(R.id.favEventAddres);
-            tv3 = (TextView) v.findViewById(R.id.favEventState);
-
-            // I don't have checkbox in my layout, but if I had:
-            // testCheckBox = (CheckBox) v.findViewById(R.id.checkBoxId);
+            v = inflater.inflate(R.layout.export_list_item, this, true);
+            value = v.findViewById(R.id.item_value);
+            checkBox = v.findViewById(R.id.checkBoxId);
         }
 
-        public void setPackage(Waypoint pack)
+        public void setWaypoint(Waypoint wp)
         {
-            // my custom method where I set package id, date, and time
-        ...
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
+            String name = format.format(wp.location.getTime());
+            value.setText(name);
         }
-
-        private Boolean checked = false;
 
         @Override
         public boolean isChecked()
         {
-            return checked;
-            // if I had checkbox in my layout I could
-            // return testCheckBox.checked();
+            return checkBox.isChecked();
         }
 
         @Override
         public void setChecked(boolean checked)
         {
-            this.checked = checked;
-
-            // since I choose not to have check box in my layout, I change background color
-            // according to checked state
-            if(isChecked())
-            ...
-        else
-            ...
-            // if I had checkbox in my layout I could
-            // testCheckBox.setChecked(checked);
+            checkBox.setChecked(checked);
         }
 
         @Override
         public void toggle()
         {
-            checked = !checked;
-            // if I had checkbox in my layout I could
-            // return testCheckBox.toggle();
+            checkBox.toggle();
         }
 
     }

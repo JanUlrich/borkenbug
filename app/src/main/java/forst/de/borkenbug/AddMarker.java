@@ -64,7 +64,7 @@ public class AddMarker extends AppCompatActivity {
 
         Spinner spinnerTree = findViewById(R.id.spinnerTree);
         String tree = spinnerTree.getItemAtPosition(spinnerTree.getSelectedItemPosition()).toString();
-        Spinner spinnerBug = findViewById(R.id.spinnerTree);
+        Spinner spinnerBug = findViewById(R.id.spinnerBug);
         String bug = spinnerBug.getItemAtPosition(spinnerBug.getSelectedItemPosition()).toString();
         EditText fmText = findViewById(R.id.festmeter);
         EditText flächeText = findViewById(R.id.fläche);

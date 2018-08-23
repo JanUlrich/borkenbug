@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Storage {
@@ -25,6 +27,12 @@ public class Storage {
             Waypoint wp = Waypoint.fromJSON(getFileData(f));
             if(wp != null)ret.add(wp);
         }
+        Collections.sort(ret,new Comparator<Waypoint>() {
+            @Override
+            public int compare(Waypoint waypoint, Waypoint t1) {
+                return Long.compare(t1.location.getTime(), waypoint.location.getTime());
+            }
+        });
         return ret;
     }
 
