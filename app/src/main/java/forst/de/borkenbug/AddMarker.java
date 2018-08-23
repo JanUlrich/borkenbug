@@ -67,14 +67,18 @@ public class AddMarker extends AppCompatActivity {
         Spinner spinnerBug = findViewById(R.id.spinnerTree);
         String bug = spinnerBug.getItemAtPosition(spinnerBug.getSelectedItemPosition()).toString();
         EditText fmText = findViewById(R.id.festmeter);
+        EditText flächeText = findViewById(R.id.fläche);
         int fm = 0;
         int fläche = 0;
         try{
-            fm = Integer.parseInt(fmText.getText().toString());
-            EditText flächeText = findViewById(R.id.fläche);
+        fm = Integer.parseInt(fmText.getText().toString());
+        }catch (Exception e){
+            //Dann bleibt Festmeter halt 0
+        }
+        try{
             fläche = Integer.parseInt(flächeText.getText().toString());
         }catch (Exception e){
-            //Dann bleibt Fläche und Festmeter halt 0
+            //Dann bleibt Fläche halt 0
         }
 
         final Waypoint waypoint = new Waypoint(location, new WaypointData(tree, bug, fm, fläche));
