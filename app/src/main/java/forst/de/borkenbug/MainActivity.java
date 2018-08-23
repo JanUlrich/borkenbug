@@ -20,15 +20,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -172,19 +163,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateGPSLocation(Location location){
-        TextView editLocation = findViewById(R.id.textView);
-        editLocation.setText("");
-        String longitude = "Longitude: " + location.getLongitude();
-        String latitude = "Latitude: " + location.getLatitude();
+        if(location != null){
+            TextView editLocation = findViewById(R.id.textView);
+            editLocation.setText("");
+            String longitude = "Longitude: " + location.getLongitude();
+            String latitude = "Latitude: " + location.getLatitude();
 
-        String s = longitude + "\n" + latitude;
-        s += "\nGenauigkeit: " + location.getAccuracy() + " m";
+            String s = longitude + "\n" + latitude;
+            s += "\nGenauigkeit: " + location.getAccuracy() + " m";
 
-        editLocation.setText(s);
+            editLocation.setText(s);
 
-        Button addMarkerButton = findViewById(R.id.addMarker);
-        addMarkerButton.setEnabled(true);
-        addMarkerButton.setText("Markierung erstellen");
+            Button addMarkerButton = findViewById(R.id.addMarker);
+            addMarkerButton.setEnabled(true);
+            addMarkerButton.setText("Markierung erstellen");
+        }
     }
 
     private void updateGPSStatus(Integer numSatellites){
