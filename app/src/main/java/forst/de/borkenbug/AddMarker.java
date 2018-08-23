@@ -2,9 +2,11 @@ package forst.de.borkenbug;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -24,26 +27,6 @@ import java.util.List;
 public class AddMarker extends AppCompatActivity {
 
     private Location location;
-    private static final HashMap<String, List<String>> sliderValues = new HashMap<>();
-    static{
-        List<String> fichte = new ArrayList<>();
-        fichte.add("Buckdrucker");
-        fichte.add("Kupferstecher");
-        fichte.add("Trockenheit");
-        fichte.add("Sturm");
-        sliderValues.put("Fichte", fichte);
-        List<String> tanne = new ArrayList<>();
-        tanne.add("Trockenheit");
-        tanne.add("Mistel");
-        tanne.add("Borkenkäfer");
-        sliderValues.put("Tanne", tanne);
-        List<String> buche = new ArrayList<>();
-        buche.add("Trockenheit");
-        sliderValues.put("Buche", buche);
-        List<String> eiche = new ArrayList<>();
-        eiche.add("Eichenprozessionsspinner");
-        sliderValues.put("Eiche", eiche);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +34,7 @@ public class AddMarker extends AppCompatActivity {
         setContentView(R.layout.activity_add_marker);
         setupLayout();
         Intent intent = getIntent();
-        location = (Location) intent.getParcelableExtra(MainActivity.EXTRA_POSITION);
+        location = (Location) intent.getParcelableExtra(getString(R.string.extra_position));
 
         //TextView textView = findViewById(R.id.);
         //textView.setText(location.getAccuracy() + "");
@@ -83,7 +66,7 @@ public class AddMarker extends AppCompatActivity {
 
         final Waypoint waypoint = new Waypoint(location, new WaypointData(tree, bug, fm, fläche));
         //Sync Waypoint:
-        //WaypointSync.syncWaypoint(waypoint, this);
+        WaypointSync.syncWaypoint(waypoint, this);
         //Save Waypoint:
         try {
             //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)
@@ -100,11 +83,13 @@ public class AddMarker extends AppCompatActivity {
     }
 
     private void setupLayout() {
+        Resources res = getResources();
+        String[] trees = res.getStringArray(R.array.trees);
         Spinner spinner = (Spinner) findViewById(R.id.spinnerTree);
         spinner.setOnItemSelectedListener(new OnTreeSelected());
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_spinner_item,
-                        sliderValues.keySet().toArray(new String[0]));
+                        trees);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
@@ -117,10 +102,15 @@ public class AddMarker extends AppCompatActivity {
 
         public void onItemSelected(AdapterView<?> parent,
                                    View view, int pos, long id) {
+            String item = parent.getItemAtPosition(pos).toString();
+            Resources res = getResources();
+            int treeNum = Arrays.asList(res.getStringArray(R.array.trees)).indexOf(item);
+            int treeBugsResId = res.obtainTypedArray(R.array.tree_bugs).getResourceId(treeNum, -1);
+            String[] sliderValues = res.getStringArray(treeBugsResId);
             Spinner spinner = (Spinner) findViewById(R.id.spinnerBug);
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
                     (getApplicationContext(), android.R.layout.simple_spinner_item,
-                            sliderValues.get(parent.getItemAtPosition(pos).toString()));
+                            sliderValues);
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout
                     .simple_spinner_dropdown_item);
             spinner.setAdapter(spinnerArrayAdapter);

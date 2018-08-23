@@ -19,8 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Storage {
-    public static final String WAYPOINT_DIRECTORY = "waypoints";
-
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
         List<Waypoint> ret = new ArrayList<>();
         for(File f : Storage.getListFiles(getWaypointDir(context))){
@@ -38,7 +36,7 @@ public class Storage {
 
     private static File getWaypointDir(Context context){
         File folder = new File(context.getFilesDir() +
-                File.separator + WAYPOINT_DIRECTORY);
+                File.separator + context.getString(R.string.waypoint_directory));
         if (!folder.exists()) {
             folder.mkdirs();
         }

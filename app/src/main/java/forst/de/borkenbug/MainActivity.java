@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,9 +31,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "de.forst.borkenbug.MESSAGE";
-    public static final String EXTRA_POSITION = "de.forst.borkenbug.POSITION";
-
     Thread updateThread = new Thread() {
         @Override
         public void run() {
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddMarker.class);
         Location position = model.getLastLocation().getValue();
         if(position != null){
-            intent.putExtra(EXTRA_POSITION, position);
+            intent.putExtra(getString(R.string.extra_position), position);
             startActivity(intent);
         }
         //startActivity(intent); //Debug
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         initialiseGPS();
         updateThread.start();
-
     }
 
     private void initialiseGPS() {
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Intent intent = new Intent(this, GPSError.class);
-                    intent.putExtra(EXTRA_MESSAGE, "Keine Berechtigung für GPS");
+                    intent.putExtra(getString(R.string.extra_message), "Keine Berechtigung für GPS");
                     startActivity(intent);
                     finish();
                 }
