@@ -35,7 +35,7 @@ public class Export extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data = getSharedPreferences(getString(R.string.app_name) + getString(R.string.export_activity_name), MODE_PRIVATE);
+        //data = getSharedPreferences(getString(R.string.app_name) + getString(R.string.export_activity_name), MODE_PRIVATE);
         try {
             sendEmail(null);
         } catch (IOException e) {

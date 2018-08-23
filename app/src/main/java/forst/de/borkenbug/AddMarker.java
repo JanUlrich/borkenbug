@@ -79,7 +79,7 @@ public class AddMarker extends AppCompatActivity {
 
         final Waypoint waypoint = new Waypoint(location, new WaypointData(tree, bug, fm, fläche));
         //Sync Waypoint:
-        WaypointSync.syncWaypoint(waypoint, this);
+        //WaypointSync.syncWaypoint(waypoint, this);
         //Save Waypoint:
         try {
             //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)

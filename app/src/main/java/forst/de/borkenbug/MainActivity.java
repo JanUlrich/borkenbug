@@ -18,8 +18,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button addMarkerButton = findViewById(R.id.addMarker);
+        addMarkerButton.setEnabled(false);
+        addMarkerButton.setText("Warte auf GPS ...");
+
         model = ViewModelProviders.of(this).get(Data.class);
         model.getLastLocation().observe( this, this::updateGPSLocation);
         model.getNumSatellites().observe(this, this::updateGPSStatus);
@@ -82,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
         updateThread.start();
 
     }
-
-
 
     private void initialiseGPS() {
         LocationManager locationManager = (LocationManager)
@@ -172,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
 
         editLocation.setText(s);
 
+        Button addMarkerButton = findViewById(R.id.addMarker);
+        addMarkerButton.setEnabled(true);
+        addMarkerButton.setText("Markierung erstellen");
     }
 
     private void updateGPSStatus(Integer numSatellites){
