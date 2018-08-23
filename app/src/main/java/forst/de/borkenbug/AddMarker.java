@@ -104,6 +104,9 @@ public class AddMarker extends AppCompatActivity {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
+
+        //Spinner auf Tanne setzen:
+        spinner.setSelection(spinnerArrayAdapter.getPosition("Tanne"));
     }
 
     private class OnTreeSelected implements AdapterView.OnItemSelectedListener {
