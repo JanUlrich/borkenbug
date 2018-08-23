@@ -22,7 +22,8 @@ public class Storage {
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
         List<Waypoint> ret = new ArrayList<>();
         for(File f : Storage.getListFiles(getWaypointDir(context))){
-            ret.add(Waypoint.fromJSON(getFileData(f)));
+            Waypoint wp = Waypoint.fromJSON(getFileData(f));
+            if(wp != null)ret.add(wp);
         }
         return ret;
     }

@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 public class WaypointSync {
     public static void syncWaypoint(Waypoint wp, Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url ="http://www.google.com";
+        String url ="https://balja.org/bin/?"+wp.toOSMText();
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
