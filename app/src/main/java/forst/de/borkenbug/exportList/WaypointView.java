@@ -32,7 +32,7 @@ public class WaypointView extends LinearLayout implements Checkable
     public void setWaypoint(Waypoint wp)
     {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String name = format.format(wp.location.getTime());
+        String name = format.format(wp.getTime());
         value.setText(name);
     }
 

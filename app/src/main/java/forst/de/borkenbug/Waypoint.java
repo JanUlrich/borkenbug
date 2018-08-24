@@ -8,15 +8,33 @@ import java.util.TimeZone;
 
 
 public class Waypoint {
-    public final Location location;
+    //public final Location location;
+    public final double latitude;
+    public final double longitude;
+    public final long time;
     public final WaypointData data;
     public boolean exported = false;
     public boolean synced = false;
 
     public Waypoint(Location loc, WaypointData data){
         //super("","", new GeoPoint(loc));
-        this.location = loc;
+        //this.location = loc;
         this.data = data;
+        this.latitude = loc.getLatitude();
+        this.longitude = loc.getLongitude();
+        this.time = loc.getTime();
+    }
+
+    public double getLatitude(){
+        return latitude;
+    }
+
+    public double getLongitude(){
+        return longitude;
+    }
+
+    public long getTime(){
+        return time;
     }
 
     /**
@@ -24,8 +42,8 @@ public class Waypoint {
      * @return
      */
     public String toOSMText(){
-        String ret = "" + location.getLatitude();
-        ret += "\t" + location.getLongitude();
+        String ret = "" + getLatitude();
+        ret += "\t" + getLongitude();
         ret += "\t" + data.toOSMText();
         return ret;
     }
@@ -34,8 +52,8 @@ public class Waypoint {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
-        String ret = "<wpt lat=\""+location.getLatitude()+"\" lon=\""+location.getLongitude()+"\">";
-        ret += "<time>" + df.format(location.getTime()) + "</time>";
+        String ret = "<wpt lat=\""+getLatitude()+"\" lon=\""+getLongitude()+"\">";
+        ret += "<time>" + df.format(getTime()) + "</time>";
         ret += "<name>" + data.tree + ", " + data.bug + "</name>";
         ret += "<cmt>Fläche: " + data.size + ", Festmeter: " + data.fm + "</cmt>";
         ret += "</wpt>";

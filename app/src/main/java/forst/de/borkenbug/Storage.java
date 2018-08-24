@@ -40,7 +40,7 @@ public class Storage {
         Collections.sort(ret,new Comparator<Waypoint>() {
             @Override
             public int compare(Waypoint waypoint, Waypoint t1) {
-                return Long.compare(t1.location.getTime(), waypoint.location.getTime());
+                return Long.compare(t1.getTime(), waypoint.getTime());
             }
         });
         return ret;
@@ -57,7 +57,7 @@ public class Storage {
 
     public static void setWaypointSynced(Waypoint wp, Context context){
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(wp.location.getTime());
+        String filename = format.format(wp.getTime());
         //Hier könnten die Waypoints gelöscht werden oder in einen anderen Ordner verschoben.
         //Ist momentan nicht nötig, da nicht auf den Network State Change gewartet wird sondern direkt gesendet
         //new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
@@ -65,7 +65,7 @@ public class Storage {
 
     public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(wp.location.getTime());
+        String filename = format.format(wp.getTime());
         Gson gson = new Gson();
         gson.toJson(wp, new FileWriter(getWaypointDir(context).getAbsolutePath() + File.separator + filename));
         //FileOutputStream outputStream = new FileOutputStream(
