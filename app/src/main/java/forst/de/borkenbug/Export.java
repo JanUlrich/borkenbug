@@ -25,6 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import forst.de.borkenbug.exportList.WaypointView;
+import forst.de.borkenbug.exportList.WaypointsArrayAdapter;
+
 /*
 TODO: Der Export sollte automatisch ablaufen und alles auf einer Website speichern
 Warten auf WLAN: https://stackoverflow.com/questions/8678362/wait-until-wifi-connected-on-android
@@ -102,71 +105,5 @@ public class Export extends AppCompatActivity {
                 Toast.makeText(this, "Export abgebrochen", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private class WaypointsArrayAdapter extends ArrayAdapter<Waypoint>
-    {
-
-        public WaypointsArrayAdapter(Context context, int resource, List<Waypoint> objects)
-        {
-            super(context, resource, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            if(convertView == null)
-                convertView = new WaypointView(getContext());
-
-            Waypoint pack = getItem(position);
-            WaypointView packView = (WaypointView) convertView;
-            packView.setWaypoint(pack);
-
-            return convertView;
-        }
-
-    }
-
-    private class WaypointView extends LinearLayout implements Checkable
-    {
-        private View v;
-        private TextView value;
-
-        private CheckBox checkBox;
-
-        public WaypointView(Context context)
-        {
-            super(context);
-            LayoutInflater inflater = LayoutInflater.from(context);
-            v = inflater.inflate(R.layout.export_list_item, this, true);
-            value = v.findViewById(R.id.item_value);
-            checkBox = v.findViewById(R.id.checkBoxId);
-        }
-
-        public void setWaypoint(Waypoint wp)
-        {
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-            String name = format.format(wp.location.getTime());
-            value.setText(name);
-        }
-
-        @Override
-        public boolean isChecked()
-        {
-            return checkBox.isChecked();
-        }
-
-        @Override
-        public void setChecked(boolean checked)
-        {
-            checkBox.setChecked(checked);
-        }
-
-        @Override
-        public void toggle()
-        {
-            checkBox.toggle();
-        }
-
     }
 }

@@ -2,8 +2,6 @@ package forst.de.borkenbug;
 
 import android.location.Location;
 
-import com.google.gson.Gson;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -19,15 +17,6 @@ public class Waypoint {
         //super("","", new GeoPoint(loc));
         this.location = loc;
         this.data = data;
-    }
-
-    public String toJSON(){
-        return new Gson().toJson(this);
-    }
-
-    public static Waypoint fromJSON(String json) {
-        //return new Waypoint(new Gson().fromJson(json, Location.class), new WaypointData());
-        return new Gson().fromJson(json, Waypoint.class);
     }
 
     /**

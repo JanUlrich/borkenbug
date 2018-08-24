@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,9 +30,11 @@ public class Storage {
     }
 
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
+        Gson gson = new Gson();
         List<Waypoint> ret = new ArrayList<>();
         for(File f : Storage.getListFiles(getWaypointDir(context))){
-            Waypoint wp = Waypoint.fromJSON(getFileData(f));
+            //Waypoint wp = Waypoint.fromJSON(getFileData(f));
+            Waypoint wp  = gson.fromJson(new FileReader(f), Waypoint.class);
             if(wp != null)ret.add(wp);
         }
         Collections.sort(ret,new Comparator<Waypoint>() {
@@ -63,10 +66,12 @@ public class Storage {
     public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
         String filename = format.format(wp.location.getTime());
-        FileOutputStream outputStream = new FileOutputStream(
-                getWaypointDir(context).getAbsolutePath() + File.separator + filename);
-        outputStream.write(wp.toJSON().getBytes());
-        outputStream.close();
+        Gson gson = new Gson();
+        gson.toJson(wp, new FileWriter(getWaypointDir(context).getAbsolutePath() + File.separator + filename));
+        //FileOutputStream outputStream = new FileOutputStream(
+        //        getWaypointDir(context).getAbsolutePath() + File.separator + filename);
+        //outputStream.write(wp.toJSON().getBytes());
+        //outputStream.close();
     }
 
     private static List<File> getListFiles(File parentDir) {
