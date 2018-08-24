@@ -35,9 +35,6 @@ public class AddMarker extends AppCompatActivity {
         setupLayout();
         Intent intent = getIntent();
         location = (Location) intent.getParcelableExtra(getString(R.string.extra_position));
-
-        //TextView textView = findViewById(R.id.);
-        //textView.setText(location.getAccuracy() + "");
     }
 
     public void addMarker(View view){
@@ -66,7 +63,7 @@ public class AddMarker extends AppCompatActivity {
 
         final Waypoint waypoint = new Waypoint(location, new WaypointData(tree, bug, fm, fläche));
         //Sync Waypoint:
-        WaypointSync.syncWaypoint(waypoint, this);
+        //WaypointSync.syncWaypoint(waypoint, this);
         //Save Waypoint:
         try {
             //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)

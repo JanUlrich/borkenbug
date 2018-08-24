@@ -1,6 +1,7 @@
 package forst.de.borkenbug;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +25,7 @@ public class WaypointSync {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("Borkenbug", "" + error);
             }
         });
         // Add the request to the RequestQueue.

@@ -1,10 +1,10 @@
 package forst.de.borkenbug;
 
 class WaypointData {
-    private final String tree;
-    private final String bug;
-    private final int size;
-    private final int fm;
+    public final String tree;
+    public final String bug;
+    public final int size;
+    public final int fm;
 
     public WaypointData(String baumart, String schadensart, int fm, int fläche){
         this.tree = baumart;

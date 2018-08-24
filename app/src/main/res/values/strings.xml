@@ -8,6 +8,8 @@
     <string name="extra_position">de.forst.borkenbug.POSITION</string>
     <string name="waypoint_directory">waypoints</string>
 
+    <integer name="mail_intent_flag">314</integer>
+
     <string-array
         name="trees">
         <item

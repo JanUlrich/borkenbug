@@ -19,6 +19,15 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Storage {
+
+    public static File generateExportFile(String data, Context context) throws IOException {
+        File file = File.createTempFile("export.gpx", null, context.getCacheDir());
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(data.getBytes());
+        outputStream.close();
+        return file;
+    }
+
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
         List<Waypoint> ret = new ArrayList<>();
         for(File f : Storage.getListFiles(getWaypointDir(context))){

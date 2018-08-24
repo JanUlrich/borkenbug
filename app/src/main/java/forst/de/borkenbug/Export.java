@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,12 +31,9 @@ Warten auf WLAN: https://stackoverflow.com/questions/8678362/wait-until-wifi-con
  */
 public class Export extends AppCompatActivity {
 
-    SharedPreferences data;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //data = getSharedPreferences(getString(R.string.app_name) + getString(R.string.export_activity_name), MODE_PRIVATE);
         setContentView(R.layout.activity_export);
 
         WaypointsArrayAdapter adapter = null;
@@ -55,7 +53,17 @@ public class Export extends AppCompatActivity {
         }
     }
 
-    public void sendEmail(View view) throws IOException {
+    private String generateGPXFile(List<Waypoint> fromWPs){
+        String ret = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
+                "<gpx version=\"1.1\" creator=\"Borkenbug-App\">";
+        for(Waypoint wp : fromWPs){
+            ret += "\n" + wp.toGPXPoint();
+        }
+        ret += "</gpx>";
+        return ret;
+    }
+
+    public void sendEmail(View view) {
         List<Waypoint> exports = new ArrayList<>();
 
         ListView listView = findViewById(R.id.dataList);
@@ -68,10 +76,7 @@ public class Export extends AppCompatActivity {
         }
         if(exports.size()==0)return;
 
-        String data = "";
-        for(Waypoint wp : exports){
-            data += wp.toJSON();
-        }
+        String data = generateGPXFile(exports);
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
@@ -80,21 +85,21 @@ public class Export extends AppCompatActivity {
         i.putExtra(Intent.EXTRA_TEXT   , data);
         //i.putExtra(Intent.EXTRA_STREAM, path);
         try {
-            //startActivityForResult(Intent.createChooser(i, "Sende mail..."), MAIL_INTENT);
-            startActivity(Intent.createChooser(i, "Sende mail..."));
+            //startActivityForResult(Intent.createChooser(i, "Sende mail..."), getResources().getInteger(R.integer.mail_intent_flag));
+            startActivityForResult(i, getResources().getInteger(R.integer.mail_intent_flag));
+            //startActivity(Intent.createChooser(i, "Sende mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "FEHLER: Es ist kein Email-Client installiert", Toast.LENGTH_LONG).show();
         }
     }
-    private final int MAIL_INTENT = 312315;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MAIL_INTENT) {
+        if (requestCode == getResources().getInteger(R.integer.mail_intent_flag)) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Daten exportiert", Toast.LENGTH_SHORT).show();
                 finish();
             }else{
-
+                Toast.makeText(this, "Export abgebrochen", Toast.LENGTH_SHORT).show();
             }
         }
     }
