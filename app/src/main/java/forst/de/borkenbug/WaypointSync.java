@@ -17,8 +17,9 @@ import java.net.URLEncoder;
 public class WaypointSync {
     public static void syncWaypoint(Waypoint wp, Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://borkenbug.balja.org/bin/?"+ wp.toOSMText();
-
+        String url = null;
+        try {
+            url = "https://borkenbug.balja.org/bin/?" + URLEncoder.encode(wp.toOSMText(), "utf-8").replace("+", "%20");
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -34,6 +35,8 @@ public class WaypointSync {
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

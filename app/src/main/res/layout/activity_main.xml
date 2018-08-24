@@ -40,6 +40,12 @@
             android:layout_height="wrap_content"
             android:text="Daten exportieren"
             android:onClick="export"/>
+        <Button
+            android:id="@+id/showMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Karte aufrufen"
+            android:onClick="showMap"/>
     </LinearLayout>
 
 

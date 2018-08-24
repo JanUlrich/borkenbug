@@ -13,6 +13,7 @@ import android.location.GpsSatellite;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
     public void export(View view) throws IOException {
         Intent intent = new Intent(this, Export.class);
         startActivity(intent);
+        //WaypointSync.syncWaypoint(Storage.getWaypoints(this).get(0), this); //DEBUG
+    }
+
+    public void showMap(View view) {
+        String url = "https://borkenbug.balja.org/html/map.html";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     @Override
