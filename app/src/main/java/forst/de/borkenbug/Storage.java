@@ -1,6 +1,8 @@
 package forst.de.borkenbug;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -12,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,14 +22,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 public class Storage {
 
-    public static File generateExportFile(String data, Context context) throws IOException {
-        File file = File.createTempFile("export.gpx", null, context.getCacheDir());
-        FileOutputStream outputStream = new FileOutputStream(file);
+    public static Uri generateExportFile(String data, Context context) throws IOException {
+        File path = new File(context.getFilesDir(), "export");
+        if(!path.exists())path.mkdirs();
+        File newFile = new File(path, "export.gpx");
+        if(newFile.exists()){
+            newFile.delete();
+            newFile = new File(path, "export.gpx");
+        }
+        Uri contentUri = FileProvider.getUriForFile(context, context.getString(R.string.fileprovider), newFile);
+        //File file = File.createTempFile("export.gpx", null, context.getCacheDir());
+        FileOutputStream outputStream = new FileOutputStream(newFile);
         outputStream.write(data.getBytes());
         outputStream.close();
-        return file;
+        return contentUri;
     }
 
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
@@ -34,13 +47,13 @@ public class Storage {
         List<Waypoint> ret = new ArrayList<>();
         for(File f : Storage.getListFiles(getWaypointDir(context))){
             //Waypoint wp = Waypoint.fromJSON(getFileData(f));
-            Waypoint wp  = gson.fromJson(new FileReader(f), Waypoint.class);
+            Waypoint wp  = gson.fromJson(getFileData(f), Waypoint.class);
             if(wp != null)ret.add(wp);
         }
         Collections.sort(ret,new Comparator<Waypoint>() {
             @Override
             public int compare(Waypoint waypoint, Waypoint t1) {
-                return Long.compare(t1.getTime(), waypoint.getTime());
+                return Long.compare(t1.getTime().getTime(), waypoint.getTime().getTime());
             }
         });
         return ret;
@@ -67,11 +80,10 @@ public class Storage {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
         String filename = format.format(wp.getTime());
         Gson gson = new Gson();
-        gson.toJson(wp, new FileWriter(getWaypointDir(context).getAbsolutePath() + File.separator + filename));
-        //FileOutputStream outputStream = new FileOutputStream(
-        //        getWaypointDir(context).getAbsolutePath() + File.separator + filename);
-        //outputStream.write(wp.toJSON().getBytes());
-        //outputStream.close();
+        FileOutputStream outputStream = new FileOutputStream(
+                getWaypointDir(context).getAbsolutePath() + File.separator + filename);
+        outputStream.write(gson.toJson(wp).getBytes());
+        outputStream.close();
     }
 
     private static List<File> getListFiles(File parentDir) {

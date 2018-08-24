@@ -4,6 +4,7 @@ import android.location.Location;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 
@@ -11,18 +12,18 @@ public class Waypoint {
     //public final Location location;
     public final double latitude;
     public final double longitude;
-    public final long time;
+    public final Date time;
     public final WaypointData data;
     public boolean exported = false;
     public boolean synced = false;
 
-    public Waypoint(Location loc, WaypointData data){
+    public Waypoint(Location loc, Date time, WaypointData data){
         //super("","", new GeoPoint(loc));
         //this.location = loc;
         this.data = data;
         this.latitude = loc.getLatitude();
         this.longitude = loc.getLongitude();
-        this.time = loc.getTime();
+        this.time = time;
     }
 
     public double getLatitude(){
@@ -33,7 +34,7 @@ public class Waypoint {
         return longitude;
     }
 
-    public long getTime(){
+    public Date getTime(){
         return time;
     }
 

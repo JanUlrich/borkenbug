@@ -61,7 +61,7 @@ public class AddMarker extends AppCompatActivity {
             //Dann bleibt Fläche halt 0
         }
 
-        final Waypoint waypoint = new Waypoint(location, new WaypointData(tree, bug, fm, fläche));
+        final Waypoint waypoint = new Waypoint(location, Calendar.getInstance().getTime(), new WaypointData(tree, bug, fm, fläche));
         //Sync Waypoint:
         //WaypointSync.syncWaypoint(waypoint, this);
         //Save Waypoint:

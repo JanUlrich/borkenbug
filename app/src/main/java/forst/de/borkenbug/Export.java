@@ -3,6 +3,7 @@ package forst.de.borkenbug;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,17 +57,17 @@ public class Export extends AppCompatActivity {
         }
     }
 
-    private String generateGPXFile(List<Waypoint> fromWPs){
+    private Uri generateGPXFile(List<Waypoint> fromWPs) throws IOException {
         String ret = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
                 "<gpx version=\"1.1\" creator=\"Borkenbug-App\">";
         for(Waypoint wp : fromWPs){
             ret += "\n" + wp.toGPXPoint();
         }
         ret += "</gpx>";
-        return ret;
+        return Storage.generateExportFile(ret, this.getApplicationContext());
     }
 
-    public void sendEmail(View view) {
+    public void sendEmail(View view) throws IOException {
         List<Waypoint> exports = new ArrayList<>();
 
         ListView listView = findViewById(R.id.dataList);
@@ -79,14 +80,14 @@ public class Export extends AppCompatActivity {
         }
         if(exports.size()==0)return;
 
-        String data = generateGPXFile(exports);
+        Uri exportUri = generateGPXFile(exports);
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"stadelmeier.andreas@gmail.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "Testdaten");
-        i.putExtra(Intent.EXTRA_TEXT   , data);
-        //i.putExtra(Intent.EXTRA_STREAM, path);
+        i.putExtra(Intent.EXTRA_SUBJECT, "GPX Export");
+        i.putExtra(Intent.EXTRA_TEXT   , "");
+        i.putExtra(Intent.EXTRA_STREAM, exportUri);
         try {
             //startActivityForResult(Intent.createChooser(i, "Sende mail..."), getResources().getInteger(R.integer.mail_intent_flag));
             startActivityForResult(i, getResources().getInteger(R.integer.mail_intent_flag));
