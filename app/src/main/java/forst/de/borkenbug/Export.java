@@ -84,7 +84,7 @@ public class Export extends AppCompatActivity {
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"stadelmeier.andreas@gmail.com"});
+        //i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"stadelmeier.andreas@gmail.com"});
         i.putExtra(Intent.EXTRA_SUBJECT, "GPX Export");
         i.putExtra(Intent.EXTRA_TEXT   , "");
         i.putExtra(Intent.EXTRA_STREAM, exportUri);
