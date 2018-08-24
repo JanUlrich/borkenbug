@@ -67,9 +67,9 @@ public class Export extends AppCompatActivity {
         return Storage.generateExportFile(ret, this.getApplicationContext());
     }
 
+    List<Waypoint> exports;
     public void sendEmail(View view) throws IOException {
-        List<Waypoint> exports = new ArrayList<>();
-
+        exports = new ArrayList<>();
         ListView listView = findViewById(R.id.dataList);
         SparseBooleanArray checked = listView.getCheckedItemPositions();
         for (int i = 0; i < listView.getCount(); i++) {
@@ -101,6 +101,9 @@ public class Export extends AppCompatActivity {
         if (requestCode == getResources().getInteger(R.integer.mail_intent_flag)) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Daten exportiert", Toast.LENGTH_SHORT).show();
+                for(Waypoint wp : exports){
+                    Storage.setWaypointExported(wp, this);
+                }
                 finish();
             }else{
                 Toast.makeText(this, "Export abgebrochen", Toast.LENGTH_SHORT).show();

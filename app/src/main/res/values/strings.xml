@@ -7,6 +7,7 @@
     <string name="extra_message">de.forst.borkenbug.MESSAGE</string>
     <string name="extra_position">de.forst.borkenbug.POSITION</string>
     <string name="waypoint_directory">waypoints</string>
+    <string name="waypoint_unsynced_directory">waypointsUnsynced</string>
     <string name="fileprovider">forst.de.borkenbug.fileprovider</string>
 
     <integer name="mail_intent_flag">314</integer>

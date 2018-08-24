@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(intent); //Debug
     }
 
-    public void export(View view){
+    public void export(View view) throws IOException {
         Intent intent = new Intent(this, Export.class);
         startActivity(intent);
     }

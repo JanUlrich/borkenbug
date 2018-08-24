@@ -40,7 +40,7 @@ public class AddMarker extends AppCompatActivity {
     public void addMarker(View view){
         Context context = getApplicationContext();
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(Calendar.getInstance().getTime());
+        String timestamp = format.format(Calendar.getInstance().getTime());
 
         Spinner spinnerTree = findViewById(R.id.spinnerTree);
         String tree = spinnerTree.getItemAtPosition(spinnerTree.getSelectedItemPosition()).toString();
@@ -63,13 +63,13 @@ public class AddMarker extends AppCompatActivity {
 
         final Waypoint waypoint = new Waypoint(location, Calendar.getInstance().getTime(), new WaypointData(tree, bug, fm, fläche));
         //Sync Waypoint:
-        //WaypointSync.syncWaypoint(waypoint, this);
+        WaypointSync.syncWaypoint(waypoint, this);
         //Save Waypoint:
         try {
             //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)
             Storage.saveWaypoint(waypoint, getApplicationContext());
 
-            CharSequence text = "Erfolgreich gespeichert\n" + filename;
+            CharSequence text = "Erfolgreich gespeichert\n" + timestamp;
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
@@ -91,8 +91,8 @@ public class AddMarker extends AppCompatActivity {
                 .simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
 
-        //Spinner auf Tanne setzen:
-        spinner.setSelection(spinnerArrayAdapter.getPosition("Tanne"));
+        //Spinner auf Tanne setzen: (erstes Element im String array)
+        spinner.setSelection(spinnerArrayAdapter.getPosition(getResources().getStringArray(R.array.trees)[0]));
     }
 
     private class OnTreeSelected implements AdapterView.OnItemSelectedListener {

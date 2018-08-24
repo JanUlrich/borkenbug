@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
+import java.io.IOException;
+
 public class NetworkReceiver  extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -12,7 +14,13 @@ public class NetworkReceiver  extends BroadcastReceiver {
         if (cm == null)
             return;
         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
-
+            try {
+                for(Waypoint wp : Storage.getUnsyncedWaypoints(context)){
+                    WaypointSync.syncWaypoint(wp, context);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             // Do nothing
         }

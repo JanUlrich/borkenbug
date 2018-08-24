@@ -43,12 +43,17 @@ public class Storage {
     }
 
     public static List<Waypoint> getWaypoints(Context context) throws IOException {
-        Gson gson = new Gson();
+        return getWaypoints(context, getWaypointDir(context));
+    }
+    public static List<Waypoint> getUnsyncedWaypoints(Context context) throws IOException {
+        return getWaypoints(context, getWaypointUnsyncedDir(context));
+    }
+    public static List<Waypoint> getWaypoints(Context context, File dir) throws IOException {
         List<Waypoint> ret = new ArrayList<>();
-        for(File f : Storage.getListFiles(getWaypointDir(context))){
+        for(File f : Storage.getListFiles(dir)){
             //Waypoint wp = Waypoint.fromJSON(getFileData(f));
-            Waypoint wp  = gson.fromJson(getFileData(f), Waypoint.class);
-            if(wp != null)ret.add(wp);
+            Waypoint wp  = getWaypoint(f);
+            ret.add(wp);
         }
         Collections.sort(ret,new Comparator<Waypoint>() {
             @Override
@@ -56,6 +61,13 @@ public class Storage {
                 return Long.compare(t1.getTime().getTime(), waypoint.getTime().getTime());
             }
         });
+        return ret;
+    }
+
+    private static Waypoint getWaypoint(File f) throws IOException {
+        Gson gson = new Gson();
+        Waypoint ret = gson.fromJson(getFileData(f), Waypoint.class);
+        if(ret == null)throw new IOException();
         return ret;
     }
 
@@ -68,12 +80,38 @@ public class Storage {
         return folder;
     }
 
+    private static File getWaypointUnsyncedDir(Context context){
+        File folder = new File(context.getFilesDir() +
+                File.separator + context.getString(R.string.waypoint_unsynced_directory));
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return folder;
+    }
+
     public static void setWaypointSynced(Waypoint wp, Context context){
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
         String filename = format.format(wp.getTime());
-        //Hier könnten die Waypoints gelöscht werden oder in einen anderen Ordner verschoben.
-        //Ist momentan nicht nötig, da nicht auf den Network State Change gewartet wird sondern direkt gesendet
-        //new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
+        new File(getWaypointUnsyncedDir(context).getAbsolutePath() + File.separator + filename).delete();
+        new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
+        wp.synced = true;
+        try {
+            saveWaypoint(wp, context);
+        } catch (IOException e) {
+            //TODO: Man könnte den alten Waypoint nicht direkt löschen sondern erst in einen Backup-Ordner verschieben. Tritt dann hier die Exception auf, wären die Daten des WPs nicht verloren
+        }
+    }
+
+    public static void setWaypointExported(Waypoint wp, Context context){
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
+        String filename = format.format(wp.getTime());
+        new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
+        wp.exported = true;
+        try {
+            saveWaypoint(wp, context);
+        } catch (IOException e) {
+            //TODO: Man könnte den alten Waypoint nicht direkt löschen sondern erst in einen Backup-Ordner verschieben. Tritt dann hier die Exception auf, wären die Daten des WPs nicht verloren
+        }
     }
 
     public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
@@ -84,6 +122,12 @@ public class Storage {
                 getWaypointDir(context).getAbsolutePath() + File.separator + filename);
         outputStream.write(gson.toJson(wp).getBytes());
         outputStream.close();
+        if(!wp.synced){
+            outputStream = new FileOutputStream(
+                    getWaypointUnsyncedDir(context).getAbsolutePath() + File.separator + filename);
+            outputStream.write(gson.toJson(wp).getBytes());
+            outputStream.close();
+        }
     }
 
     private static List<File> getListFiles(File parentDir) {
