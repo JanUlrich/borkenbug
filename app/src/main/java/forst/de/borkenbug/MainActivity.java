@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 LocationManager.GPS_PROVIDER, 5000, 50, locationListener);
         locationManager.addGpsStatusListener(locationListener);
 
-        Location location = locationManager.getLastKnownLocation("Borkenbug");
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if(location != null){
             locationListener.onLocationChanged(location);
         }
