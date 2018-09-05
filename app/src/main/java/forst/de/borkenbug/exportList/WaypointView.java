@@ -8,6 +8,7 @@ import android.widget.Checkable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import forst.de.borkenbug.R;
@@ -31,8 +32,8 @@ public class WaypointView extends LinearLayout implements Checkable
 
     public void setWaypoint(Waypoint wp)
     {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String name = format.format(wp.getTime());
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
+        String name = dateFormat.format(wp.getTime());
         value.setText(name);
     }
 

@@ -3,26 +3,18 @@ package forst.de.borkenbug;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 public class Storage {
 
@@ -90,8 +82,7 @@ public class Storage {
     }
 
     public static void setWaypointSynced(Waypoint wp, Context context){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(wp.getTime());
+        String filename = getFileName(wp);
         new File(getWaypointUnsyncedDir(context).getAbsolutePath() + File.separator + filename).delete();
         new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
         wp.synced = true;
@@ -103,8 +94,7 @@ public class Storage {
     }
 
     public static void setWaypointExported(Waypoint wp, Context context){
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(wp.getTime());
+        String filename = getFileName(wp);
         new File(getWaypointDir(context).getAbsolutePath() + File.separator + filename).delete();
         wp.exported = true;
         try {
@@ -115,8 +105,7 @@ public class Storage {
     }
 
     public static void saveWaypoint(Waypoint wp, Context context) throws IOException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String filename = format.format(wp.getTime());
+        String filename = getFileName(wp);
         Gson gson = new Gson();
         FileOutputStream outputStream = new FileOutputStream(
                 getWaypointDir(context).getAbsolutePath() + File.separator + filename);
@@ -156,5 +145,9 @@ public class Storage {
         br.close();
 
         return text.toString();
+    }
+
+    private static String getFileName(Waypoint wp){
+        return "WPHash-" + wp.hashCode();
     }
 }
