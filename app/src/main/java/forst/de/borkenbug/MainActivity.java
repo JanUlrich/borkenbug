@@ -13,11 +13,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.osmdroid.config.Configuration;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private Data model = null;
+    private MapView map;
 
     public void setMarker(View view){
         Intent intent = new Intent(this, AddMarker.class);
@@ -83,6 +90,35 @@ public class MainActivity extends AppCompatActivity {
 
         initialiseGPS();
         updateThread.start();
+
+        //load/initialize the osmdroid configuration, this can be done
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        //setting this before the layout is inflated is a good idea
+        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
+        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
+        //see also StorageUtils
+        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
+
+        //inflate and create the map
+        setContentView(R.layout.activity_main);
+
+        map = (MapView) findViewById(R.id.map);
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), map);
+        mLocationOverlay.enableMyLocation();
+        map.getOverlays().add(mLocationOverlay);
+    }
+
+    public void onResume(){
+        super.onResume();
+        map.onResume();
+    }
+
+    public void onPause(){
+        super.onPause();
+        map.onPause();
     }
 
     @Override

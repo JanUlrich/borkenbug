@@ -46,6 +46,9 @@
             android:layout_height="wrap_content"
             android:text="Karte aufrufen"
             android:onClick="showMap"/>
+        <org.osmdroid.views.MapView android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
     </LinearLayout>
 
 
