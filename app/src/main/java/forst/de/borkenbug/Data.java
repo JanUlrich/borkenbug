@@ -12,7 +12,6 @@ import java.util.List;
 
 public class Data extends ViewModel {
     private MutableLiveData<Integer> satellites = new MutableLiveData<>();
-    private MutableLiveData<Date> lastGPSFix = new MutableLiveData<>();
     private MutableLiveData<Location> lastLocation = new MutableLiveData<>();
 
     public void updateSats(int s){
@@ -20,12 +19,7 @@ public class Data extends ViewModel {
     }
 
     public void updateLocation(Location loc){
-        lastGPSFix.setValue(Calendar.getInstance().getTime());
         lastLocation.setValue(loc);
-    }
-
-    public LiveData<Date> getLastGPSFix(){
-        return lastGPSFix;
     }
 
     public LiveData<Location> getLastLocation(){

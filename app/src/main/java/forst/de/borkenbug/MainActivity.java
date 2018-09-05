@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateLastGPSLocationUpdate(model.getLastGPSFix().getValue());
+                            updateLastGPSLocationUpdate();
                         }
                     });
                 }
@@ -85,10 +85,24 @@ public class MainActivity extends AppCompatActivity {
         updateThread.start();
     }
 
+    @Override
+    protected void onStop() {
+        //Batterie sparen, wenn APP geschlossen wird:
+        if(locationListener != null){
+            LocationManager locationManager = (LocationManager)
+                    getSystemService(Context.LOCATION_SERVICE);
+            locationManager.removeUpdates(locationListener);
+        }
+
+        super.onStop();
+    }
+
+    private MyLocationListener locationListener;
+
     private void initialiseGPS() {
         LocationManager locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
-        MyLocationListener locationListener = new MyLocationListener(model);
+        locationListener = new MyLocationListener(model);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -151,10 +165,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateLastGPSLocationUpdate(Date lastUpdate){
-        if(lastUpdate == null)return;
+    private void updateLastGPSLocationUpdate(){
+        long lastUpdate = model.getLastLocation().getValue().getTime();
         SimpleDateFormat format = new SimpleDateFormat("mm:ss");
-        long difference = Calendar.getInstance().getTime().getTime() - lastUpdate.getTime();
+        long difference = Calendar.getInstance().getTime().getTime() - lastUpdate;
         String s = "Letzte Aktualisierung: " + format.format(difference);
 
         TextView editLocation = findViewById(R.id.gpsLastUpdate);
