@@ -17,10 +17,12 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,8 +41,6 @@ public class AddMarker extends AppCompatActivity {
 
     public void addMarker(View view){
         Context context = getApplicationContext();
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY-hh:mm:ss");
-        String timestamp = format.format(Calendar.getInstance().getTime());
 
         Spinner spinnerTree = findViewById(R.id.spinnerTree);
         String tree = spinnerTree.getItemAtPosition(spinnerTree.getSelectedItemPosition()).toString();
@@ -69,7 +69,7 @@ public class AddMarker extends AppCompatActivity {
             //TODO: Hier in einem extra Ordner Waypoints speichern (am besten das in Storage implementieren)
             Storage.saveWaypoint(waypoint, getApplicationContext());
 
-            CharSequence text = "Erfolgreich gespeichert\n" + timestamp;
+            CharSequence text = "Erfolgreich gespeichert";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
