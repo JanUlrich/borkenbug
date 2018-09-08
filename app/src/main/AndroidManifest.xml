@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -22,23 +22,26 @@
         </activity>
         <activity android:name=".GPSError" />
         <activity android:name=".AddMarker" />
-        <activity android:name=".Export"></activity>
-        <receiver android:name=".NetworkReceiver" >
-            <intent-filter >
+        <activity android:name=".Export" />
+
+        <receiver android:name=".NetworkReceiver">
+            <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <activity android:name=".MapView"></activity>
     </application>
 
 </manifest>

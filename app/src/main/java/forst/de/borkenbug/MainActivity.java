@@ -16,19 +16,31 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import forst.de.borkenbug.osm.WaypointOverlay;
 
 public class MainActivity extends AppCompatActivity {
     Thread updateThread = new Thread() {
@@ -103,17 +115,35 @@ public class MainActivity extends AppCompatActivity {
         //inflate and create the map
         setContentView(R.layout.activity_main);
 
+
         map = (MapView) findViewById(R.id.map);
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
+        map.getController().setZoom(11.0);
+
+        //MyLocation Overlay:
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), map);
         mLocationOverlay.enableMyLocation();
         map.getOverlays().add(mLocationOverlay);
+
+        //Scale bar:
+        final Context context = getApplicationContext();
+        final DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        ScaleBarOverlay mScaleBarOverlay = new ScaleBarOverlay(map);
+        mScaleBarOverlay.setCentred(true);
+        //play around with these values to get the location on screen in the right place for your application
+        mScaleBarOverlay.setScaleBarOffset(dm.widthPixels / 2, 10);
+        map.getOverlays().add(mScaleBarOverlay);
     }
 
     public void onResume(){
         super.onResume();
         map.onResume();
+        try {
+            setMarkers();
+        } catch (Exception e) {
+            Toast.makeText(this, "IO-Fehler", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onPause(){
@@ -131,6 +161,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onStop();
+    }
+    private void setMarkers() throws IOException {
+        List<OverlayItem> items = new ArrayList<>();
+        for(Waypoint wp : Storage.getWaypoints(getApplicationContext())){
+            items.add(new WaypointOverlay(wp));
+        }
+        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                    @Override
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                        //do something
+                        return true;
+                    }
+                    @Override
+                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+                        return false;
+                    }
+                }, getApplicationContext());
+        map.getOverlays().add(mOverlay);
     }
 
     private MyLocationListener locationListener;
@@ -209,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView editLocation = findViewById(R.id.gpsLastUpdate);
         editLocation.setText(s);
+
+        //map.getController().setCenter(new GeoPoint(model.getLastLocation().getValue()));
     }
 
     private void updateGPSLocation(Location location){

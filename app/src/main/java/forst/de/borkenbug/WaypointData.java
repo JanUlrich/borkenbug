@@ -1,6 +1,6 @@
 package forst.de.borkenbug;
 
-class WaypointData {
+public class WaypointData {
     public final String tree;
     public final String bug;
     public final int size;

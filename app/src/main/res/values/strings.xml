@@ -12,46 +12,28 @@
 
     <integer name="mail_intent_flag">314</integer>
 
-    <string-array
-        name="trees">
-        <item
-            >Tanne</item>
-        <item
-            >Fichte</item>
-        <item
-            >Buche</item>
-        <item
-            >Eiche</item>
+    <string-array name="trees">
+        <item>Tanne</item>
+        <item>Fichte</item>
+        <item>Buche</item>
+        <item>Eiche</item>
     </string-array>
-    <string-array
-        name="bugs_tanne">
-        <item
-            >Borkenkäfer</item>
-        <item
-            >Trockenheit</item>
-        <item
-            >Mistel</item>
+    <string-array name="bugs_tanne">
+        <item>Borkenkäfer</item>
+        <item>Trockenheit</item>
+        <item>Mistel</item>
     </string-array>
-    <string-array
-        name="bugs_fichte">
-        <item
-            >Buchdrucker</item>
-        <item
-            >Kupferstecher</item>
-        <item
-            >Sturm</item>
-        <item
-            >Trockenheit</item>
+    <string-array name="bugs_fichte">
+        <item>Buchdrucker</item>
+        <item>Kupferstecher</item>
+        <item>Sturm</item>
+        <item>Trockenheit</item>
     </string-array>
-    <string-array
-        name="bugs_buche">
-        <item
-            >Trockenheit</item>
+    <string-array name="bugs_buche">
+        <item>Trockenheit</item>
     </string-array>
-    <string-array
-        name="bugs_eiche">
-        <item
-            >Eichenprozessionsspinner</item>
+    <string-array name="bugs_eiche">
+        <item>Eichenprozessionsspinner</item>
     </string-array>
     <array name="tree_bugs">
         <item>@array/bugs_tanne</item>
